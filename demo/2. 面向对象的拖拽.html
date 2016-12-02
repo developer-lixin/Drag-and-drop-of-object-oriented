@@ -1,0 +1,70 @@
+<!DOCTYPE html>
+<html>
+	<head>
+		<meta charset="UTF-8">
+		<title></title>
+		<style>
+			body {
+				margin: 0;
+			}
+			#div {
+				width: 100px;
+				height: 100px;
+				background: red;
+				position: absolute;
+				left: 0;
+				top: 0;
+			}
+		</style>
+	</head>
+	<body>
+		<div id="div"></div>
+		<script>
+			function Tab(name) {
+				this.div = document.getElementById(name);
+				this.disX = 0;
+				this.disY = 0;
+				this.down();
+			
+			}
+			
+			Tab.prototype.down = function() {
+				var _this = this;
+				this.div.addEventListener('mousedown',function(ev){
+					_this.fnDown(ev);
+				});
+				
+				Tab.prototype.fnDown = function(ev) {
+					var _this = this;
+					this.disX = ev.pageX - this.div.offsetLeft;
+					this.disY = ev.pageY - this.div.offsetTop;
+					
+					document.addEventListener('mousemove',fnMove);
+					function fnMove(ev){
+						_this.move(ev);
+					}
+					
+					document.addEventListener('mouseup',fnUp);
+					function fnUp(){
+						_this.up(fnMove,fnUp);
+					}
+				}
+			};
+			
+			Tab.prototype.move = function(ev) {
+				this.div.style.left = ev.pageX - this.disX + 'px';
+				this.div.style.top = ev.pageY - this.disY + 'px';
+				
+			};
+			
+			Tab.prototype.up = function(fnMove,fnUp) {
+				document.removeEventListener('mousemove',fnMove);
+				document.removeEventListener('mouseup',fnUp);
+				
+			};
+			
+			new Tab('div');
+			
+		</script>
+	</body>
+</html>
